@@ -17,7 +17,7 @@ const ProductCard = (props) => {
   return (
     <>
       <div
-        className='card col-sm-2 m-3'
+        className='card col-md-4 col-lg-2 m-3'
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         style={boxStyle}
