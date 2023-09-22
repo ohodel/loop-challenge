@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import './App.css';
 import ProductsContainer from './components/ProductsContainer';
 
 function App() {
@@ -11,9 +10,7 @@ function App() {
   const getProducts = async (page) => {
     console.log('PAGE', page);
     try {
-      const productsRaw = await fetch(`/products?page=${page}`, {
-        // headers: { request_type },
-      });
+      const productsRaw = await fetch(`/products?page=${page}`);
       const productsParsed = await productsRaw.json();
 
       console.log('PRODUCTS RECEIVED', productsParsed);
@@ -28,7 +25,6 @@ function App() {
 
   const changePage = (e) => {
     e.preventDefault();
-    console.log('CLICKED');
     const target = e.target;
     let targetText = target.innerText;
 
@@ -37,7 +33,7 @@ function App() {
     else newPage = page - 1;
     setPage(newPage);
 
-    // Reset product state to change UI to loading symbol
+    // Reset product state to render the loading symbol
     setReceived(false);
     setProducts([]);
 
