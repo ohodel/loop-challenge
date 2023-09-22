@@ -1,6 +1,11 @@
 # Olivia's Loop Take Home Challenge
 
-Please enjoy my take home universe of birds assignment!
+Please enjoy my take home universe of birds assignment! For this assignment, I have used the following tech stack:
+
+* **Frontend:** React
+* **Backend:** Node, Express
+* **Testing:** Jest, Supertest, React Testing Library
+* **Styling:** Bootstrap
 
 To run server,
 
