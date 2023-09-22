@@ -12,26 +12,30 @@ app.use(express.json());
 // Store all order data
 let orders = [];
 const getOrders = async () => {
-  let orderUrl =
-    'https://universe-of-birds.myshopify.com/admin/api/2020-04/orders.json';
-  while (orderUrl) {
-    const totalOrdersRaw = await fetch(orderUrl, {
-      headers: {
-        Authorization:
-          'Basic ' +
-          btoa(
-            'ce1a505e76f9fa5609b1580c9efc04a9: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'
-          ),
-      },
-    });
+  try {
+    let orderUrl =
+      'https://universe-of-birds.myshopify.com/admin/api/2020-04/orders.json';
+    while (orderUrl) {
+      const totalOrdersRaw = await fetch(orderUrl, {
+        headers: {
+          Authorization:
+            'Basic ' +
+            btoa(
+              'ce1a505e76f9fa5609b1580c9efc04a9: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'
+            ),
+        },
+      });
 
-    const totalOrdersParsed = await totalOrdersRaw.json();
-    orders = orders.concat(totalOrdersParsed.orders);
+      const totalOrdersParsed = await totalOrdersRaw.json();
+      orders = orders.concat(totalOrdersParsed.orders);
 
-    let orderHeaders = totalOrdersRaw.headers.get('Link');
-    const parsedLinks = parseLinkHeader(orderHeaders);
+      let orderHeaders = totalOrdersRaw.headers.get('Link');
+      const parsedLinks = parseLinkHeader(orderHeaders);
 
-    orderUrl = parsedLinks.next ? parsedLinks.next.url : null;
+      orderUrl = parsedLinks.next ? parsedLinks.next.url : null;
+    }
+  } catch (err) {
+    console.log(err);
   }
 };
 
@@ -40,21 +44,25 @@ getOrders();
 // Retrieve total product count
 let totalCount = 0;
 const getTotalCount = async () => {
-  const totalCountRaw = await fetch(
-    `https://universe-of-birds.myshopify.com//admin/api/2023-04/products/count.json`,
-    {
-      headers: {
-        Authorization:
-          'Basic ' +
-          btoa(
-            'ce1a505e76f9fa5609b1580c9efc04a9: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'
-          ),
-      },
-    }
-  );
+  try {
+    const totalCountRaw = await fetch(
+      `https://universe-of-birds.myshopify.com//admin/api/2023-04/products/count.json`,
+      {
+        headers: {
+          Authorization:
+            'Basic ' +
+            btoa(
+              'ce1a505e76f9fa5609b1580c9efc04a9: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'
+            ),
+        },
+      }
+    );
 
-  const totalCountParsed = await totalCountRaw.json();
-  totalCount = totalCountParsed.count;
+    const totalCountParsed = await totalCountRaw.json();
+    totalCount = totalCountParsed.count;
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 getTotalCount();
@@ -62,53 +70,47 @@ getTotalCount();
 // Get all products
 
 const getProducts = async () => {
-  let products = [];
-  let productUrl =
-    'https://universe-of-birds.myshopify.com/admin/api/2020-04/products.json?fields=id,image,title,variants';
-  while (productUrl) {
-    const totalProductsRaw = await fetch(productUrl, {
-      headers: {
-        Authorization:
-          'Basic ' +
-          btoa(
-            'ce1a505e76f9fa5609b1580c9efc04a9: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'
-          ),
-      },
-    });
-
-    const totalProductsParsed = await totalProductsRaw.json();
-
-    // Add only varients to product list
-    totalProductsParsed.products.forEach((product) => {
-      // Store the default name
-      const default_name = product.title;
-      product.variants.forEach((variant) => {
-        const name =
-          variant.title === 'Default Title' ? default_name : variant.title;
-        variant.title = name;
-        variant.image = product.image;
+  try {
+    let products = [];
+    let productUrl =
+      'https://universe-of-birds.myshopify.com/admin/api/2020-04/products.json?fields=id,image,title,variants';
+    while (productUrl) {
+      const totalProductsRaw = await fetch(productUrl, {
+        headers: {
+          Authorization:
+            'Basic ' +
+            btoa(
+              'ce1a505e76f9fa5609b1580c9efc04a9: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'
+            ),
+        },
       });
-      products = products.concat(product.variants);
-    });
 
-    let productHeaders = totalProductsRaw.headers.get('Link');
-    const parsedLinks = parseLinkHeader(productHeaders);
+      const totalProductsParsed = await totalProductsRaw.json();
 
-    if (parsedLinks) {
-      productUrl = parsedLinks.next ? parsedLinks.next.url : null;
+      // Add only varients to product list
+      totalProductsParsed.products.forEach((product) => {
+        // Store the default name
+        const default_name = product.title;
+        product.variants.forEach((variant) => {
+          const name =
+            variant.title === 'Default Title' ? default_name : variant.title;
+          variant.title = name;
+          variant.image = product.image;
+        });
+        products = products.concat(product.variants);
+      });
+
+      let productHeaders = totalProductsRaw.headers.get('Link');
+      const parsedLinks = parseLinkHeader(productHeaders);
+
+      if (parsedLinks) {
+        productUrl = parsedLinks.next ? parsedLinks.next.url : null;
+      }
     }
+    return products;
+  } catch (err) {
+    console.log(err);
   }
-  return products;
-};
-
-// getProducts();
-
-// Store next and previous
-const pagination = {
-  next: {
-    url: `https://universe-of-birds.myshopify.com/admin/api/2020-04/products.json?fields=id,image,title,variants,status&status=active`,
-  },
-  prev: null,
 };
 
 /* Routes */
@@ -119,52 +121,36 @@ app.get('/products', async (req, res, next) => {
     total_count: totalCount,
     products: [],
   };
+
+  // Query just relevant product inventory with a comma separated string
   let inventoryIdsString = '';
 
-  let productsUrl = pagination.next.url;
-
-  if (req.headers.request_type === 'prev') productsUrl = pagination.prev.url;
-
-  // Retrieve the first 20 products
-  // const productsRaw = await fetch(productsUrl, {
-  //   headers: {
-  //     Authorization:
-  //       'Basic ' +
-  //       btoa(
-  //         'ce1a505e76f9fa5609b1580c9efc04a9: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'
-  //       ),
-  //   },
-  // });
-
-  // let productHeaders = productsRaw.headers.get('Link');
-  // const parsedLinks = parseLinkHeader(productHeaders);
-  // console.log('PARSEDLINKES', parsedLinks);
-  // pagination.next = parsedLinks.next;
-  // pagination.prev = parsedLinks.previous;
-
-  // console.log('PAGINATION OBJ', pagination);
-
-  // const products = await productsRaw.json();
-
-  // TRYING THIS OUT!!
-  const products = await getProducts();
-  console.log(products);
-
-  // Get products from storage
+  // Use the query parameters to get a list of the products to send back
   const page = req.query.page;
-
   const startIndex = (page - 1) * 15;
   const endIndex = page * 15;
-
+  const products = await getProducts();
   const currentProducts = products.slice(startIndex, endIndex);
 
-  console.log('length', currentProducts.length);
-
-  // Add each product to the output
-  // products.products.forEach(async (product) => {
-  currentProducts.forEach(async (product) => {
-    // Add the id to productIds
+  // Populate output variable with additional info about each product
+  currentProducts.forEach((product) => {
+    // Add inventory id to query string (handled later on)
     inventoryIdsString += product.inventory_item_id + ',';
+
+    // Parse the order data to determine total value/orders of the product
+    let total_value = 0;
+    let total_orders = 0;
+    for (let i = 0; i < orders.length; i++) {
+      // Line_items indicates the products in each order
+      const lineItems = orders[i].line_items;
+      lineItems.forEach((item) => {
+        if (item.variant_id === product.id) {
+          // Increment total orders and value
+          total_orders++;
+          total_value = total_value + +product.price;
+        }
+      });
+    }
 
     // Format price for USDollar
     let USDollar = new Intl.NumberFormat('en-US', {
@@ -172,66 +158,57 @@ app.get('/products', async (req, res, next) => {
       currency: 'USD',
     });
 
-    let total_value = 0;
-
     const current = {
       id: product.id,
       name: product.title,
       image: product.image,
-      total_orders: 0,
+      total_orders: total_orders,
       price: USDollar.format(product.price),
       total_value: USDollar.format(total_value),
       inventory_item_id: product.inventory_item_id,
       total_inventory: 0,
     };
 
-    // Loop through each order
-    for (let i = 0; i < orders.length; i++) {
-      const lineItems = orders[i].line_items;
-      // Loop through each line item
-      lineItems.forEach((item) => {
-        // If the id matches
-        if (item.product_id === current.id) {
-          console.log('FOUND');
-          // Increment total orders and value
-          current.total_orders++;
-          total_value += current.price;
-        }
-      });
-    }
-
     output.products.push(current);
   });
 
-  // Retrieve a list of all inventory
-  const inventoryRaw = await fetch(
-    `https://universe-of-birds.myshopify.com/admin/api/2023-04/inventory_levels.json?inventory_item_ids=${inventoryIdsString}`,
-    {
-      headers: {
-        Authorization:
-          'Basic ' +
-          btoa(
-            'ce1a505e76f9fa5609b1580c9efc04a9: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'
-          ),
-      },
-    }
-  );
+  // Retrieve a list of each product's current inventory
+  try {
+    const inventoryRaw = await fetch(
+      `https://universe-of-birds.myshopify.com/admin/api/2023-04/inventory_levels.json?inventory_item_ids=${inventoryIdsString}`,
+      {
+        headers: {
+          Authorization:
+            'Basic ' +
+            btoa(
+              'ce1a505e76f9fa5609b1580c9efc04a9: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'
+            ),
+        },
+      }
+    );
 
-  const inventoryParsed = await inventoryRaw.json();
+    const inventoryParsed = await inventoryRaw.json();
 
-  // Loop through each item in output
-  output.products.forEach((product) => {
-    // Loop through each inventoryParsed
-    inventoryParsed.inventory_levels.forEach((inventory) => {
-      if (inventory.inventory_item_id === product.inventory_item_id)
-        product.total_inventory += inventory.available;
+    // Add the associated inventory level to each item in output
+    output.products.forEach((product) => {
+      inventoryParsed.inventory_levels.forEach((inventory) => {
+        if (inventory.inventory_item_id === product.inventory_item_id)
+          product.total_inventory += inventory.available;
+      });
     });
-  });
+  } catch (err) {
+    return next({
+      log: 'Error in retrieving inventory' + err,
+      status: 500,
+      message: { err: 'An error occurred' },
+    });
+  }
 
+  // If successful, send output object
   res.status(200).send(output);
 });
 
-// Endpoint does not exist
+// Handle endopoint does not exist
 app.use((req, res) => {
   res.status(404).send('Not Found');
 });

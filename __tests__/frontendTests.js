@@ -82,7 +82,6 @@ describe('React Component Tests', () => {
 
     it('Renders page change links', () => {
       const list = screen.getAllByRole('list');
-      console.log(list);
       const previous = within(list[0]).getByText('Previous');
       expect(previous).toBeTruthy();
 
