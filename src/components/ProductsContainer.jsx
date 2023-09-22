@@ -3,7 +3,7 @@ import ProductCard from './ProductCard';
 import Pagination from './Pagination';
 
 const ProductsContainer = (props) => {
-  // Map received product information to an array of components
+  // Map received product information to an array of product card components
   const productCards = [];
 
   for (let i = 0; i < props.productData.length; i++) {

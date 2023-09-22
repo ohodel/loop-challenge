@@ -1,8 +1,6 @@
 import React from 'react';
 
 const Pagination = (props) => {
-  console.log('PROPS', props);
-
   return (
     <nav aria-label='...'>
       <ul className='pagination justify-content-center'>

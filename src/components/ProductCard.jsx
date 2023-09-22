@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from 'react';
 
 const ProductCard = (props) => {
+  // Use state to change product card border on hover
   const [hover, setHover] = useState(false);
 
   const handleMouseEnter = () => {
     setHover(true);
   };
-
   const handleMouseLeave = () => {
     setHover(false);
   };
-
   const boxStyle = {
     border: hover ? '3px solid #3b82f680' : null,
   };
@@ -23,6 +22,7 @@ const ProductCard = (props) => {
         onMouseLeave={handleMouseLeave}
         style={boxStyle}
       >
+        {/* If no image, use Loop logo */}
         {props.image ? (
           <img src={props.image} className='card-img-top'></img>
         ) : (
@@ -37,7 +37,7 @@ const ProductCard = (props) => {
         <div className='card-body'>
           <h4 className='card-title text-center font-bold'>{props.title}</h4>
           <p className='card-text font-weight-bold'>
-            <span style={{ 'font-weight': 'bold' }}>Price: </span>
+            <span style={{ fontWeight: 'bold' }}>Price: </span>
             {props.price ? props.price : '$0.00'}
           </p>
           <p className='card-text'>
