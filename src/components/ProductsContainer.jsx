@@ -48,7 +48,7 @@ const ProductsContainer = (props) => {
       ) : (
         <div className='flex justify-content-center'>
           <div className='row justify-content-center'>{productCards}</div>
-          <Pagination changePage={props.changePage} />
+          <Pagination changePage={props.changePage} page={props.page}/>
         </div>
       )}
     </div>

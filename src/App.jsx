@@ -5,10 +5,13 @@ function App() {
   const [products, setProducts] = useState([]);
   const [received, setReceived] = useState(false);
   const [totalCount, setTotalCount] = useState(0);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState({
+    page: 1,
+    previous: 'disabled',
+    next: 'active',
+  });
 
   const getProducts = async (page) => {
-    console.log('PAGE', page);
     try {
       const productsRaw = await fetch(`/products?page=${page}`);
       const productsParsed = await productsRaw.json();
@@ -29,9 +32,13 @@ function App() {
     let targetText = target.innerText;
 
     let newPage;
-    if (targetText === 'Next') newPage = page + 1;
-    else newPage = page - 1;
-    setPage(newPage);
+    if (targetText === 'Next') newPage = page.page + 1;
+    else newPage = page.page - 1;
+    setPage({
+      page: newPage,
+      previous: newPage <= 1 ? 'disabled' : 'active',
+      next: newPage < Math.ceil(totalCount / 15) ? 'active' : 'disabled',
+    });
 
     // Reset product state to render the loading symbol
     setReceived(false);
@@ -61,6 +68,7 @@ function App() {
         totalCount={totalCount}
         getProducts={getProducts}
         changePage={changePage}
+        page={page}
       />
     </div>
   );
