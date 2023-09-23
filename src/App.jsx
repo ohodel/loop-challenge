@@ -55,12 +55,13 @@ function App() {
 
   return (
     <div className='h-100 d-flex flex-column align-items-center'>
-      <p
-        className='h1 display-2 pt-5 pb-5'
+      <h1
+        className='h1 display-3 pt-5 pb-1'
         style={{ color: '#2b33ff', fontWeight: 'bold' }}
       >
         Universe of Birds
-      </p>
+      </h1>
+      <h3 className='h3 pb-5 text-muted'>Product Details</h3>
       <ProductsContainer
         productData={products}
         received={received}
