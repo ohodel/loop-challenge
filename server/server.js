@@ -1,13 +1,9 @@
 import express from 'express';
 import parseLinkHeader from 'parse-link-header';
 const app = express();
-
 const PORT = 3000;
 
-// Body parser
-app.use(express.json());
-
-/* Local Storage */
+/* Retreive and store data */
 
 // Store all order data
 let orders = [];
@@ -67,8 +63,7 @@ const getTotalCount = async () => {
 
 getTotalCount();
 
-// Get all products
-
+// Retrieve all products
 const getProducts = async () => {
   try {
     let products = [];
