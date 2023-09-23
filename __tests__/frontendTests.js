@@ -52,6 +52,8 @@ describe('React Component Tests', () => {
           },
         ],
         received: true,
+        page: { current: 1, previous: 'disabled', next: 'active' },
+        totalCount: 100,
       };
       productsContainer = render(<ProductsContainer {...props} />);
       const card = screen.getByText('Test');
@@ -74,6 +76,8 @@ describe('React Component Tests', () => {
 
     const props = {
       changePage: jest.fn(),
+      page: { current: 1, previous: 'disabled', next: 'active' },
+      totalCount: 100,
     };
 
     beforeEach(() => {
@@ -87,6 +91,13 @@ describe('React Component Tests', () => {
 
       const next = within(list[0]).getByText('Next');
       expect(next).toBeTruthy();
+    });
+
+    it('Renders correct number of pages', () => {
+      const list = screen.getByRole('list');
+      const { getAllByRole } = within(list);
+      const items = getAllByRole("listitem")
+      expect(items).toHaveLength(9);
     });
   });
 });

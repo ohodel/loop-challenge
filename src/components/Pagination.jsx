@@ -11,12 +11,19 @@ const Pagination = (props) => {
 
   // Create page number components
   let pages = [];
-  for (let i = 1; i < totalPages; i++) {
+  for (let i = 1; i <= totalPages; i++) {
     let className = 'page-item';
-    if (i === props.page.page) className = 'page-item active';
+    // Activate only if the number equals the current page
+    if (i === props.page.current) className = 'page-item active';
     pages.push(
       <li className={className}>
-        <a className='page-link'>{i}</a>
+        <a
+          className='page-link'
+          onClick={props.changePage}
+          style={{ cursor: 'pointer' }}
+        >
+          {i}
+        </a>
       </li>
     );
   }

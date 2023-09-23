@@ -6,7 +6,7 @@ function App() {
   const [received, setReceived] = useState(false);
   const [totalCount, setTotalCount] = useState(0);
   const [page, setPage] = useState({
-    page: 1,
+    current: 1,
     previous: 'disabled',
     next: 'active',
   });
@@ -15,8 +15,6 @@ function App() {
     try {
       const productsRaw = await fetch(`/products?page=${page}`);
       const productsParsed = await productsRaw.json();
-
-      console.log('PRODUCTS RECEIVED', productsParsed);
 
       setProducts(productsParsed.products);
       setTotalCount(productsParsed.total_count);
@@ -32,10 +30,11 @@ function App() {
     let targetText = target.innerText;
 
     let newPage;
-    if (targetText === 'Next') newPage = page.page + 1;
-    else newPage = page.page - 1;
+    if (targetText === 'Next') newPage = page.current + 1;
+    else if (targetText === 'Previous') newPage = page.current - 1;
+    else newPage = +targetText;
     setPage({
-      page: newPage,
+      current: newPage,
       previous: newPage <= 1 ? 'disabled' : 'active',
       next: newPage < Math.ceil(totalCount / 15) ? 'active' : 'disabled',
     });
