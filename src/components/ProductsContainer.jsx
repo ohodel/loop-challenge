@@ -35,7 +35,7 @@ const ProductsContainer = (props) => {
   }
 
   return (
-    <div className='w-95'>
+    <div className='container'>
       {/* If products have not been received yet, return the loading symbol */}
       {!productCards.length && !props.received ? (
         <div
@@ -48,7 +48,7 @@ const ProductsContainer = (props) => {
       ) : (
         <div className='flex justify-content-center'>
           <div className='row justify-content-center'>{productCards}</div>
-          <Pagination changePage={props.changePage} page={props.page}/>
+          <Pagination changePage={props.changePage} page={props.page} totalCount={props.totalCount} />
         </div>
       )}
     </div>

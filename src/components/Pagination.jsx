@@ -1,8 +1,25 @@
 import React from 'react';
 
 const Pagination = (props) => {
-  const prevClass = props.page.previous === 'disabled' ? 'page-item disabled' : 'page-item';
-  const nextClass = props.page.next === 'disabled' ? 'page-item disabled' : 'page-item';
+  // Disable previous and next buttons
+  const prevClass =
+    props.page.previous === 'disabled' ? 'page-item disabled' : 'page-item';
+  const nextClass =
+    props.page.next === 'disabled' ? 'page-item disabled' : 'page-item';
+
+  const totalPages = Math.ceil(props.totalCount / 15);
+
+  // Create page number components
+  let pages = [];
+  for (let i = 1; i < totalPages; i++) {
+    let className = 'page-item';
+    if (i === props.page.page) className = 'page-item active';
+    pages.push(
+      <li className={className}>
+        <a className='page-link'>{i}</a>
+      </li>
+    );
+  }
 
   return (
     <nav aria-label='...'>
@@ -16,6 +33,7 @@ const Pagination = (props) => {
             Previous
           </a>
         </li>
+        {pages}
         <li className={nextClass}>
           <a
             className='page-link'
