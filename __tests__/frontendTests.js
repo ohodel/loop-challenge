@@ -12,6 +12,7 @@ describe('React Component Tests', () => {
 
     const props = {
       title: 'Test',
+      type: 'Small',
       image: 'TestURL',
       total_orders: 10,
       price: '$1',
@@ -29,8 +30,10 @@ describe('React Component Tests', () => {
     });
 
     it('Renders the correct product details', () => {
-      const heading = screen.getByRole('heading');
-      expect(heading).toHaveTextContent('Test');
+      const headings = screen.getAllByRole('heading');
+      expect(headings).toHaveLength(2);
+      expect(headings[0]).toHaveTextContent('Test');
+      expect(headings[1]).toHaveTextContent('Small');
     });
   });
 
