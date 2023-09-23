@@ -19,6 +19,7 @@ const ProductsContainer = (props) => {
           price={currProduct.price}
           total_value={currProduct.total_value}
           total_inventory={currProduct.total_inventory}
+          type={currProduct.type}
         />
       );
     } else {

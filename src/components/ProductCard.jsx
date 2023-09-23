@@ -35,7 +35,12 @@ const ProductCard = (props) => {
           ></img>
         )}
         <div className='card-body'>
-          <h4 className='card-title text-center font-bold'>{props.title}</h4>
+          <h4 className='card-title text-center font-weight-bold'>
+            {props.title}
+          </h4>
+          <h6 className='card-title text-center text-muted'>
+            <em>{props.type}</em>
+          </h6>
           <p className='card-text font-weight-bold'>
             <span style={{ fontWeight: 'bold' }}>Price: </span>
             {props.price ? props.price : '$0.00'}

@@ -82,14 +82,16 @@ const getProducts = async () => {
 
       const totalProductsParsed = await totalProductsRaw.json();
 
-      // Add only varients to product list
+      // Add only variants to product list
       totalProductsParsed.products.forEach((product) => {
         // Store the default name
         const default_name = product.title;
         product.variants.forEach((variant) => {
-          const name =
-            variant.title === 'Default Title' ? default_name : variant.title;
-          variant.title = name;
+          // Type handles options
+          // See here for more details: https://shopify.dev/docs/api/admin-rest/2023-07/resources/product-variant
+          const type = variant.title === 'Default Title' ? null : variant.title;
+          variant.title = default_name;
+          variant.type = type;
           variant.image = product.image;
         });
         products = products.concat(product.variants);
@@ -156,6 +158,7 @@ app.get('/products', async (req, res, next) => {
     const current = {
       id: product.id,
       name: product.title,
+      type: product.type,
       image: product.image,
       total_orders: total_orders,
       price: USDollar.format(product.price),
