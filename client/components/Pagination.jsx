@@ -1,4 +1,3 @@
-import React from 'react';
 
 const Pagination = (props) => {
   // Disable previous and next buttons

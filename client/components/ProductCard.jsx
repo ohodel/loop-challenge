@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 const ProductCard = (props) => {
   // Use state to change product card border on hover
