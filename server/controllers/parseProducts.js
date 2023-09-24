@@ -1,20 +1,20 @@
 export function parseProducts(req, res, next) {
+  // Output object will ultimately be sent to the client
   const output = {
     total_count: res.locals.totalCount,
     products: [],
   };
 
-  // Use the query parameters to get a list of the products to send back
+  // Use the query parameters to determine which products to send back
   const page = req.query.page;
-  // Filter if page is not a number
+  // Scrub request if page is not a number
   if (+page) {
     const startIndex = (+page - 1) * 15;
     const endIndex = +page * 15;
-    const currentProducts = res.locals.allProducts.slice(startIndex, endIndex);
 
-    // Populate output variable with additional info about each product
+    const currentProducts = res.locals.allProducts.slice(startIndex, endIndex);
     currentProducts.forEach((product) => {
-      // Add inventory id to query string (handled later on)
+      // Inventory id is used in getInventory
       res.locals.inventoryIdsString += product.inventory_item_id + ',';
 
       // Parse the order data to determine total value/orders of the product
@@ -54,7 +54,6 @@ export function parseProducts(req, res, next) {
     });
 
     res.locals.output = output;
-
     return next();
   } else {
     return next({

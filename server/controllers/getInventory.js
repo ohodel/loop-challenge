@@ -7,7 +7,7 @@ export async function getInventory(req, res, next) {
       inventory_url + res.locals.inventoryIdsString
     );
 
-    // Add the associated inventory level to each item in output
+    // Map the associated inventory to each product in output
     res.locals.output.products.forEach((product) => {
       inventory.data.inventory_levels.forEach((inventory) => {
         if (inventory.inventory_item_id === product.inventory_item_id)
