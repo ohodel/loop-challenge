@@ -2,9 +2,9 @@ import React from 'react';
 import { render, screen, within } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
-import ProductCard from '../src/components/ProductCard.jsx';
-import ProductsContainer from '../src/components/ProductsContainer.jsx';
-import Pagination from '../src/components/Pagination.jsx';
+import ProductCard from '../client/components/ProductCard.jsx';
+import ProductsContainer from '../client/components/ProductsContainer.jsx';
+import Pagination from '../client/components/Pagination.jsx';
 
 describe('React Component Tests', () => {
   describe('Product Card', () => {
