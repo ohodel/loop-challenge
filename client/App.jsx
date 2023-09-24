@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import ProductsContainer from './components/ProductsContainer';
 
 function App() {
