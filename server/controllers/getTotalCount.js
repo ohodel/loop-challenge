@@ -1,5 +1,5 @@
-const url = `https://universe-of-birds.myshopify.com//admin/api/2023-04/products/count.json`;
 import fetchShopify from '../utils/shopify.js';
+import { count_url } from './constants.js';
 
 // Simple cache for count data here
 let totalCount = 0;
@@ -9,7 +9,7 @@ export async function getTotalCount(req, res, next) {
   // Could use Redis for this...
   if (totalCount === 0) {
     try {
-      const totalCountParsed = await fetchShopify(url);
+      const totalCountParsed = await fetchShopify(count_url);
       totalCount = totalCountParsed.data.count;
       res.locals.totalCount = totalCount;
       return next();

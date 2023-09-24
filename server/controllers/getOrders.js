@@ -1,4 +1,5 @@
 import fetchShopify from '../utils/shopify.js';
+import { order_url } from './constants.js';
 
 // Simple cache for order data here
 let orders = [];
@@ -8,15 +9,14 @@ export async function getOrders(req, res, next) {
   // Could use Redis for this...
   if (!orders.length) {
     try {
-      let orderUrl =
-        'https://universe-of-birds.myshopify.com/admin/api/2020-04/orders.json';
-      while (orderUrl) {
-        const totalOrders = await fetchShopify(orderUrl);
+      let url = order_url;
+      while (url) {
+        const totalOrders = await fetchShopify(url);
 
         // Add orders to orders array
         orders = orders.concat(totalOrders.data.orders);
 
-        orderUrl = totalOrders.links.next ? totalOrders.links.next.url : null;
+        url = totalOrders.links.next ? totalOrders.links.next.url : null;
       }
       res.locals.orders = orders;
       return next();

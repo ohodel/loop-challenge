@@ -1,10 +1,10 @@
 import fetchShopify from '../utils/shopify.js';
+import { product_url } from './constants.js';
 
 export async function getProducts(req, res, next) {
   try {
     let products = [];
-    let url =
-      'https://universe-of-birds.myshopify.com/admin/api/2020-04/products.json?fields=id,image,title,variants';
+    let url = product_url;
     while (url) {
       const totalProducts = await fetchShopify(url);
 
