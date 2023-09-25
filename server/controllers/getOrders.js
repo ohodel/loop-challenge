@@ -1,7 +1,7 @@
 import fetchShopify from '../utils/shopify.js';
 import { order_url } from './constants.js';
 
-// Cache for order data stored here
+// Simple cache
 // Could use something like Redis for this...
 let orders = [];
 
@@ -13,7 +13,8 @@ export async function getOrders(req, res, next) {
       while (url) {
         const totalOrders = await fetchShopify(url);
 
-        // Add orders to orders array
+        // Store all order data in cache (aggregation done in parseProducts)
+        // In future, can modify to just store necessary info
         orders = orders.concat(totalOrders.data.orders);
 
         // Reassign url to the provided next property

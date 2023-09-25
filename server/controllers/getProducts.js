@@ -1,7 +1,7 @@
 import fetchShopify from '../utils/shopify.js';
 import { product_url } from './constants.js';
 
-// Cache for order data stored here
+// Simple cache
 // Could use something like Redis for this...
 let products = [];
 
@@ -13,7 +13,7 @@ export async function getProducts(req, res, next) {
       while (url) {
         const totalProducts = await fetchShopify(url);
 
-        // Add only variants to product list
+        // Add all product variants to cache
         totalProducts.data.products.forEach((product) => {
           const default_name = product.title;
           product.variants.forEach((variant) => {

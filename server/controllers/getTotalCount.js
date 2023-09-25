@@ -1,7 +1,7 @@
 import fetchShopify from '../utils/shopify.js';
 import { count_url } from './constants.js';
 
-// Cache for count data stored here
+// Simple cache
 // Could use something like Redis for this...
 let totalCount = 0;
 
@@ -10,6 +10,8 @@ export async function getTotalCount(req, res, next) {
   if (totalCount === 0) {
     try {
       const totalCountParsed = await fetchShopify(count_url);
+
+      // Store total product count in cache
       totalCount = totalCountParsed.data.count;
     } catch (err) {
       return next({
