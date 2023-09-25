@@ -20,8 +20,6 @@ export async function getOrders(req, res, next) {
         // Reassign url to the provided next property
         url = totalOrders.links.next ? totalOrders.links.next.url : null;
       }
-      res.locals.orders = orders;
-      return next();
     } catch (err) {
       return next({
         log: 'Error in getOrders' + err,
