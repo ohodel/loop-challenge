@@ -9,7 +9,7 @@ import {
 
 const router = express.Router();
 
-// Get meals
+// Handle get request
 router.get(
   '/',
   getOrders,
