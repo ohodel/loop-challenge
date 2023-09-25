@@ -17,21 +17,25 @@ const ProductCard = (props) => {
   return (
     <>
       <div
-        className='card col-md-4 col-lg-2 m-3'
+        className='card col-md-4 col-lg-2 m-3 p-0'
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         style={boxStyle}
       >
         {/* If no image, use Loop logo */}
         {props.image ? (
-          <img src={props.image} className='card-img-top'></img>
+          <img
+            src={props.image}
+            className='card-img-top '
+            style={{ height: '35%', objectFit: 'cover' }}
+          ></img>
         ) : (
           <img
             src={
               'https://images.ctfassets.net/kscjafx0jjrh/4zlnZcMpAM4r1SJNbPFE5Z/fc2c14951d7c590bd71aae7ab30db320/loop-isologo.svg'
             }
             className='card-img-top'
-            style={{ height: '85px' }}
+            style={{ height: '35%' }}
           ></img>
         )}
         <div className='card-body'>
